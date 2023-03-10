@@ -4967,10 +4967,122 @@ class Toast extends BaseComponent {
 enableDismissTrigger(Toast);
 defineJQueryPlugin(Toast);
 const header = {
-  template: `<h4>Esto es el header</h4>`
+  template: `<p class="ps-3">Alumno: Rub\xE9n Redondo</p>`
 };
 const home = {
-  template: `<h1>home</h1>`
+  template: `<div class="container ">
+                    <h2 class="justify-content-center text-center pt-5 pb-5">Birras y tapas</h2>
+                    <div id="parte1"></div>
+                    <div id="parte2" class="pt-5"></div>
+                </div>`
+};
+const cervezas = [
+  {
+    id: 1,
+    nombre: "Mahou Cinco Estrellas",
+    tipo: "Lager",
+    origen: "Madrid",
+    descripcion: "Cerveza rubia, suave y refrescante con un sabor ligeramente amargo.",
+    imagen: "https://www.mahou.es/wp-content/themes/mahou_v2/template-contents/mahou-familia/dist/images/Botella_Mahou_5_Estrellas.png"
+  },
+  {
+    id: 2,
+    nombre: "Estrella Galicia",
+    tipo: "Lager",
+    origen: "Galicia",
+    descripcion: "Cerveza suave y equilibrada con un sabor ligeramente amargo y aroma a malta.",
+    imagen: "https://cdn.shopify.com/s/files/1/0271/8158/0388/products/estrella-galicia-escerveza-3.jpg?v=1648893181"
+  },
+  {
+    id: 3,
+    nombre: "Alhambra Reserva 1925",
+    tipo: "Lager",
+    origen: "Granada",
+    descripcion: "Cerveza rubia con un sabor ligeramente dulce y toques de caramelo.",
+    imagen: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202204/04/00118602800916____3__600x600.jpg"
+  },
+  {
+    id: 4,
+    nombre: "San Miguel Especial",
+    tipo: "Lager",
+    origen: "Barcelona",
+    descripcion: "Cerveza rubia, suave y refrescante con un sabor ligeramente amargo.",
+    imagen: "https://www.sanmiguel.com/es/wp-content/uploads/sites/2/2021/01/san-miguel-gluten-free-4.png"
+  },
+  {
+    id: 5,
+    nombre: "Damm Estrella",
+    tipo: "Lager",
+    origen: "Barcelona",
+    descripcion: "Cerveza rubia, suave y refrescante con un sabor ligeramente amargo.",
+    imagen: "https://static.damm.com/sites/default/files/config-page/estrella_header_logo/estrella-damm_0.png"
+  }
+];
+const formulario = {
+  template: `<div class="row border pt-5 shadow ps-5">
+    <h2 class="pt-5">Selecciona tu cerveza y haz tu pedido</h2>
+  <div class="col-6">
+    <form class="row g-3">
+        <div class="col-12">
+          <label for="nombre" class="form-label">Nombre del grupo</label>
+          <input type="text" class="form-control" id="nombre">
+        </div>
+        <div class="col-12">
+          <label for="numeroMesa" class="form-label">Mesa</label>
+          <input type="number" class="form-control" id="numeroMesa">
+        </div>
+        <div class="col-12">
+            <label for="selectBirra" class="form-label">Elije tu birra</label>
+            <select id="selectBirra" class="form-select">
+                <option selected>Mahou Cinco Estrellas</option>
+            </select>
+        </div>
+        <div class="col-12">
+          <label for="cantidad" class="form-label">\xBFCuantas te traigo?</label>
+          <input type="number" class="form-control" id="cantidad">
+        </div> 
+        <div class="col-12">
+          <button type="submit" class="btn btn-success ps-5 pe-5">A\xF1adir pedido</button>
+        </div>
+      </form>
+  </div>
+  <div class="col-6">
+      <div class="pb-5">
+        <h3 id="nombre" class="pb-3">` + cervezas[0].nombre + `</h3>
+        <p id="descripcion">` + cervezas[0].descripcion + `</p>
+      </div>
+      <img src="` + cervezas[0].imagen + `" class="card-img-bottom w-25" alt="">
+  </div>
+</div>
+`
+};
+const tablaPedidos = {
+  template: `<div class="row shadow border pt-5 ps-3 pb-5 pe-3">
+    <div class="col-12">
+        <h3>Esto es lo que te has tomado ya ...</h3>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Cerveza</th>
+                <th scope="col">Cantidad</th>
+                <th></th>     
+                <th></th>     
+              </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>` + cervezas[0].nombre + `</td>
+                <td>` + 5 + `</td>
+                <td><button class="btn btn-danger">Eliminar</button></td>
+                <td><button class="btn btn-warning">Editar Perfil</button></td>  
+            </tr>
+            </tbody>
+          </table>
+    </div>
+</div>
+    `
 };
 document.querySelector("header").innerHTML = header.template;
 document.querySelector("main").innerHTML = home.template;
+document.querySelector("#parte1").innerHTML = formulario.template;
+document.querySelector("#parte2").innerHTML = tablaPedidos.template;
