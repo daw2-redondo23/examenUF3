@@ -12,3 +12,5 @@ document.querySelector('header').innerHTML = header.template
 document.querySelector('main').innerHTML = home.template
 document.querySelector('#parte1').innerHTML = formulario.template;
 document.querySelector('#parte2').innerHTML = tablaPedidos.template
+
+formulario.script()
