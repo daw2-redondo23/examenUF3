@@ -1,7 +1,7 @@
 import { cervezas } from "../bd"
 import { tablaPedidos } from "./tablaPedidos";
 export const  formulario = {
-    template: `<div class="row border pt-5 shadow ps-5">
+    template: `<div class="row border pt-5 shadow ps-5 pb-5">
                   <h2 class="pt-5">Selecciona tu cerveza y haz tu pedido</h2>
                 <div class="col-6">
                   <form class="row g-3">

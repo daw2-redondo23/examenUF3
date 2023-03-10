@@ -32,7 +32,7 @@ script: ()=>{
                     <td>`+ cervezas[value].nombre +`</td>
                     <td>`+ cantidad +`</td>
                     <td><button class="btn btn-danger">Eliminar</button></td>
-                    <td><button class="btn btn-warning">Editar Perfil</button></td>  
+                    <td><button class="btn btn-warning">Editar Pedido</button></td>  
                 `
     document.querySelector('tbody').appendChild(tr)
 
