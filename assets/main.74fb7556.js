@@ -1641,39 +1641,39 @@ function getElementEvents(element) {
   return eventRegistry[uid];
 }
 function bootstrapHandler(element, fn2) {
-  return function handler(event) {
-    hydrateObj(event, {
+  return function handler(event2) {
+    hydrateObj(event2, {
       delegateTarget: element
     });
     if (handler.oneOff) {
-      EventHandler.off(element, event.type, fn2);
+      EventHandler.off(element, event2.type, fn2);
     }
-    return fn2.apply(element, [event]);
+    return fn2.apply(element, [event2]);
   };
 }
 function bootstrapDelegationHandler(element, selector, fn2) {
-  return function handler(event) {
+  return function handler(event2) {
     const domElements = element.querySelectorAll(selector);
     for (let {
       target
-    } = event; target && target !== this; target = target.parentNode) {
+    } = event2; target && target !== this; target = target.parentNode) {
       for (const domElement of domElements) {
         if (domElement !== target) {
           continue;
         }
-        hydrateObj(event, {
+        hydrateObj(event2, {
           delegateTarget: target
         });
         if (handler.oneOff) {
-          EventHandler.off(element, event.type, selector, fn2);
+          EventHandler.off(element, event2.type, selector, fn2);
         }
-        return fn2.apply(target, [event]);
+        return fn2.apply(target, [event2]);
       }
     }
   };
 }
 function findHandler(events, callable, delegationSelector = null) {
-  return Object.values(events).find((event) => event.callable === callable && event.delegationSelector === delegationSelector);
+  return Object.values(events).find((event2) => event2.callable === callable && event2.delegationSelector === delegationSelector);
 }
 function normalizeParameters(originalTypeEvent, handler, delegationFunction) {
   const isDelegated = typeof handler === "string";
@@ -1691,9 +1691,9 @@ function addHandler(element, originalTypeEvent, handler, delegationFunction, one
   let [isDelegated, callable, typeEvent] = normalizeParameters(originalTypeEvent, handler, delegationFunction);
   if (originalTypeEvent in customEvents) {
     const wrapFunction = (fn3) => {
-      return function(event) {
-        if (!event.relatedTarget || event.relatedTarget !== event.delegateTarget && !event.delegateTarget.contains(event.relatedTarget)) {
-          return fn3.call(this, event);
+      return function(event2) {
+        if (!event2.relatedTarget || event2.relatedTarget !== event2.delegateTarget && !event2.delegateTarget.contains(event2.relatedTarget)) {
+          return fn3.call(this, event2);
         }
       };
     };
@@ -1727,21 +1727,21 @@ function removeNamespacedHandlers(element, events, typeEvent, namespace) {
   const storeElementEvent = events[typeEvent] || {};
   for (const handlerKey of Object.keys(storeElementEvent)) {
     if (handlerKey.includes(namespace)) {
-      const event = storeElementEvent[handlerKey];
-      removeHandler(element, events, typeEvent, event.callable, event.delegationSelector);
+      const event2 = storeElementEvent[handlerKey];
+      removeHandler(element, events, typeEvent, event2.callable, event2.delegationSelector);
     }
   }
 }
-function getTypeEvent(event) {
-  event = event.replace(stripNameRegex, "");
-  return customEvents[event] || event;
+function getTypeEvent(event2) {
+  event2 = event2.replace(stripNameRegex, "");
+  return customEvents[event2] || event2;
 }
 const EventHandler = {
-  on(element, event, handler, delegationFunction) {
-    addHandler(element, event, handler, delegationFunction, false);
+  on(element, event2, handler, delegationFunction) {
+    addHandler(element, event2, handler, delegationFunction, false);
   },
-  one(element, event, handler, delegationFunction) {
-    addHandler(element, event, handler, delegationFunction, true);
+  one(element, event2, handler, delegationFunction) {
+    addHandler(element, event2, handler, delegationFunction, true);
   },
   off(element, originalTypeEvent, handler, delegationFunction) {
     if (typeof originalTypeEvent !== "string" || !element) {
@@ -1767,30 +1767,30 @@ const EventHandler = {
     for (const keyHandlers of Object.keys(storeElementEvent)) {
       const handlerKey = keyHandlers.replace(stripUidRegex, "");
       if (!inNamespace || originalTypeEvent.includes(handlerKey)) {
-        const event = storeElementEvent[keyHandlers];
-        removeHandler(element, events, typeEvent, event.callable, event.delegationSelector);
+        const event2 = storeElementEvent[keyHandlers];
+        removeHandler(element, events, typeEvent, event2.callable, event2.delegationSelector);
       }
     }
   },
-  trigger(element, event, args) {
-    if (typeof event !== "string" || !element) {
+  trigger(element, event2, args) {
+    if (typeof event2 !== "string" || !element) {
       return null;
     }
     const $ = getjQuery();
-    const typeEvent = getTypeEvent(event);
-    const inNamespace = event !== typeEvent;
+    const typeEvent = getTypeEvent(event2);
+    const inNamespace = event2 !== typeEvent;
     let jQueryEvent = null;
     let bubbles = true;
     let nativeDispatch = true;
     let defaultPrevented = false;
     if (inNamespace && $) {
-      jQueryEvent = $.Event(event, args);
+      jQueryEvent = $.Event(event2, args);
       $(element).trigger(jQueryEvent);
       bubbles = !jQueryEvent.isPropagationStopped();
       nativeDispatch = !jQueryEvent.isImmediatePropagationStopped();
       defaultPrevented = jQueryEvent.isDefaultPrevented();
     }
-    let evt = new Event(event, {
+    let evt = new Event(event2, {
       bubbles,
       cancelable: true
     });
@@ -1990,9 +1990,9 @@ class BaseComponent extends Config {
 const enableDismissTrigger = (component, method = "hide") => {
   const clickEvent = `click.dismiss${component.EVENT_KEY}`;
   const name = component.NAME;
-  EventHandler.on(document, clickEvent, `[data-bs-dismiss="${name}"]`, function(event) {
+  EventHandler.on(document, clickEvent, `[data-bs-dismiss="${name}"]`, function(event2) {
     if (["A", "AREA"].includes(this.tagName)) {
-      event.preventDefault();
+      event2.preventDefault();
     }
     if (isDisabled(this)) {
       return;
@@ -2065,9 +2065,9 @@ class Button extends BaseComponent {
     });
   }
 }
-EventHandler.on(document, EVENT_CLICK_DATA_API$6, SELECTOR_DATA_TOGGLE$5, (event) => {
-  event.preventDefault();
-  const button = event.target.closest(SELECTOR_DATA_TOGGLE$5);
+EventHandler.on(document, EVENT_CLICK_DATA_API$6, SELECTOR_DATA_TOGGLE$5, (event2) => {
+  event2.preventDefault();
+  const button = event2.target.closest(SELECTOR_DATA_TOGGLE$5);
   const data = Button.getOrCreateInstance(button);
   data.toggle();
 });
@@ -2161,24 +2161,24 @@ class Swipe extends Config {
   dispose() {
     EventHandler.off(this._element, EVENT_KEY$9);
   }
-  _start(event) {
+  _start(event2) {
     if (!this._supportPointerEvents) {
-      this._deltaX = event.touches[0].clientX;
+      this._deltaX = event2.touches[0].clientX;
       return;
     }
-    if (this._eventIsPointerPenTouch(event)) {
-      this._deltaX = event.clientX;
+    if (this._eventIsPointerPenTouch(event2)) {
+      this._deltaX = event2.clientX;
     }
   }
-  _end(event) {
-    if (this._eventIsPointerPenTouch(event)) {
-      this._deltaX = event.clientX - this._deltaX;
+  _end(event2) {
+    if (this._eventIsPointerPenTouch(event2)) {
+      this._deltaX = event2.clientX - this._deltaX;
     }
     this._handleSwipe();
     execute(this._config.endCallback);
   }
-  _move(event) {
-    this._deltaX = event.touches && event.touches.length > 1 ? 0 : event.touches[0].clientX - this._deltaX;
+  _move(event2) {
+    this._deltaX = event2.touches && event2.touches.length > 1 ? 0 : event2.touches[0].clientX - this._deltaX;
   }
   _handleSwipe() {
     const absDeltaX = Math.abs(this._deltaX);
@@ -2194,17 +2194,17 @@ class Swipe extends Config {
   }
   _initEvents() {
     if (this._supportPointerEvents) {
-      EventHandler.on(this._element, EVENT_POINTERDOWN, (event) => this._start(event));
-      EventHandler.on(this._element, EVENT_POINTERUP, (event) => this._end(event));
+      EventHandler.on(this._element, EVENT_POINTERDOWN, (event2) => this._start(event2));
+      EventHandler.on(this._element, EVENT_POINTERUP, (event2) => this._end(event2));
       this._element.classList.add(CLASS_NAME_POINTER_EVENT);
     } else {
-      EventHandler.on(this._element, EVENT_TOUCHSTART, (event) => this._start(event));
-      EventHandler.on(this._element, EVENT_TOUCHMOVE, (event) => this._move(event));
-      EventHandler.on(this._element, EVENT_TOUCHEND, (event) => this._end(event));
+      EventHandler.on(this._element, EVENT_TOUCHSTART, (event2) => this._start(event2));
+      EventHandler.on(this._element, EVENT_TOUCHMOVE, (event2) => this._move(event2));
+      EventHandler.on(this._element, EVENT_TOUCHEND, (event2) => this._end(event2));
     }
   }
-  _eventIsPointerPenTouch(event) {
-    return this._supportPointerEvents && (event.pointerType === POINTER_TYPE_PEN || event.pointerType === POINTER_TYPE_TOUCH);
+  _eventIsPointerPenTouch(event2) {
+    return this._supportPointerEvents && (event2.pointerType === POINTER_TYPE_PEN || event2.pointerType === POINTER_TYPE_TOUCH);
   }
   static isSupported() {
     return "ontouchstart" in document.documentElement || navigator.maxTouchPoints > 0;
@@ -2346,7 +2346,7 @@ class Carousel extends BaseComponent {
   }
   _addEventListeners() {
     if (this._config.keyboard) {
-      EventHandler.on(this._element, EVENT_KEYDOWN$1, (event) => this._keydown(event));
+      EventHandler.on(this._element, EVENT_KEYDOWN$1, (event2) => this._keydown(event2));
     }
     if (this._config.pause === "hover") {
       EventHandler.on(this._element, EVENT_MOUSEENTER$1, () => this.pause());
@@ -2358,7 +2358,7 @@ class Carousel extends BaseComponent {
   }
   _addTouchEventListeners() {
     for (const img of SelectorEngine.find(SELECTOR_ITEM_IMG, this._element)) {
-      EventHandler.on(img, EVENT_DRAG_START, (event) => event.preventDefault());
+      EventHandler.on(img, EVENT_DRAG_START, (event2) => event2.preventDefault());
     }
     const endCallBack = () => {
       if (this._config.pause !== "hover") {
@@ -2377,13 +2377,13 @@ class Carousel extends BaseComponent {
     };
     this._swipeHelper = new Swipe(this._element, swipeConfig);
   }
-  _keydown(event) {
-    if (/input|textarea/i.test(event.target.tagName)) {
+  _keydown(event2) {
+    if (/input|textarea/i.test(event2.target.tagName)) {
       return;
     }
-    const direction = KEY_TO_DIRECTION[event.key];
+    const direction = KEY_TO_DIRECTION[event2.key];
     if (direction) {
-      event.preventDefault();
+      event2.preventDefault();
       this._slide(this._directionToOrder(direction));
     }
   }
@@ -2503,12 +2503,12 @@ class Carousel extends BaseComponent {
     });
   }
 }
-EventHandler.on(document, EVENT_CLICK_DATA_API$5, SELECTOR_DATA_SLIDE, function(event) {
+EventHandler.on(document, EVENT_CLICK_DATA_API$5, SELECTOR_DATA_SLIDE, function(event2) {
   const target = getElementFromSelector(this);
   if (!target || !target.classList.contains(CLASS_NAME_CAROUSEL)) {
     return;
   }
-  event.preventDefault();
+  event2.preventDefault();
   const carousel = Carousel.getOrCreateInstance(target);
   const slideIndex = this.getAttribute("data-bs-slide-to");
   if (slideIndex) {
@@ -2714,9 +2714,9 @@ class Collapse extends BaseComponent {
     });
   }
 }
-EventHandler.on(document, EVENT_CLICK_DATA_API$4, SELECTOR_DATA_TOGGLE$4, function(event) {
-  if (event.target.tagName === "A" || event.delegateTarget && event.delegateTarget.tagName === "A") {
-    event.preventDefault();
+EventHandler.on(document, EVENT_CLICK_DATA_API$4, SELECTOR_DATA_TOGGLE$4, function(event2) {
+  if (event2.target.tagName === "A" || event2.delegateTarget && event2.delegateTarget.tagName === "A") {
+    event2.preventDefault();
   }
   const selector = getSelectorFromElement(this);
   const selectorElements = SelectorEngine.find(selector);
@@ -2971,8 +2971,8 @@ class Dropdown extends BaseComponent {
       data[config]();
     });
   }
-  static clearMenus(event) {
-    if (event.button === RIGHT_MOUSE_BUTTON || event.type === "keyup" && event.key !== TAB_KEY$1) {
+  static clearMenus(event2) {
+    if (event2.button === RIGHT_MOUSE_BUTTON || event2.type === "keyup" && event2.key !== TAB_KEY$1) {
       return;
     }
     const openToggles = SelectorEngine.find(SELECTOR_DATA_TOGGLE_SHOWN);
@@ -2981,44 +2981,44 @@ class Dropdown extends BaseComponent {
       if (!context || context._config.autoClose === false) {
         continue;
       }
-      const composedPath = event.composedPath();
+      const composedPath = event2.composedPath();
       const isMenuTarget = composedPath.includes(context._menu);
       if (composedPath.includes(context._element) || context._config.autoClose === "inside" && !isMenuTarget || context._config.autoClose === "outside" && isMenuTarget) {
         continue;
       }
-      if (context._menu.contains(event.target) && (event.type === "keyup" && event.key === TAB_KEY$1 || /input|select|option|textarea|form/i.test(event.target.tagName))) {
+      if (context._menu.contains(event2.target) && (event2.type === "keyup" && event2.key === TAB_KEY$1 || /input|select|option|textarea|form/i.test(event2.target.tagName))) {
         continue;
       }
       const relatedTarget = {
         relatedTarget: context._element
       };
-      if (event.type === "click") {
-        relatedTarget.clickEvent = event;
+      if (event2.type === "click") {
+        relatedTarget.clickEvent = event2;
       }
       context._completeHide(relatedTarget);
     }
   }
-  static dataApiKeydownHandler(event) {
-    const isInput = /input|textarea/i.test(event.target.tagName);
-    const isEscapeEvent = event.key === ESCAPE_KEY$2;
-    const isUpOrDownEvent = [ARROW_UP_KEY$1, ARROW_DOWN_KEY$1].includes(event.key);
+  static dataApiKeydownHandler(event2) {
+    const isInput = /input|textarea/i.test(event2.target.tagName);
+    const isEscapeEvent = event2.key === ESCAPE_KEY$2;
+    const isUpOrDownEvent = [ARROW_UP_KEY$1, ARROW_DOWN_KEY$1].includes(event2.key);
     if (!isUpOrDownEvent && !isEscapeEvent) {
       return;
     }
     if (isInput && !isEscapeEvent) {
       return;
     }
-    event.preventDefault();
-    const getToggleButton = this.matches(SELECTOR_DATA_TOGGLE$3) ? this : SelectorEngine.prev(this, SELECTOR_DATA_TOGGLE$3)[0] || SelectorEngine.next(this, SELECTOR_DATA_TOGGLE$3)[0] || SelectorEngine.findOne(SELECTOR_DATA_TOGGLE$3, event.delegateTarget.parentNode);
+    event2.preventDefault();
+    const getToggleButton = this.matches(SELECTOR_DATA_TOGGLE$3) ? this : SelectorEngine.prev(this, SELECTOR_DATA_TOGGLE$3)[0] || SelectorEngine.next(this, SELECTOR_DATA_TOGGLE$3)[0] || SelectorEngine.findOne(SELECTOR_DATA_TOGGLE$3, event2.delegateTarget.parentNode);
     const instance = Dropdown.getOrCreateInstance(getToggleButton);
     if (isUpOrDownEvent) {
-      event.stopPropagation();
+      event2.stopPropagation();
       instance.show();
-      instance._selectMenuItem(event);
+      instance._selectMenuItem(event2);
       return;
     }
     if (instance._isShown()) {
-      event.stopPropagation();
+      event2.stopPropagation();
       instance.hide();
       getToggleButton.focus();
     }
@@ -3028,8 +3028,8 @@ EventHandler.on(document, EVENT_KEYDOWN_DATA_API, SELECTOR_DATA_TOGGLE$3, Dropdo
 EventHandler.on(document, EVENT_KEYDOWN_DATA_API, SELECTOR_MENU, Dropdown.dataApiKeydownHandler);
 EventHandler.on(document, EVENT_CLICK_DATA_API$3, Dropdown.clearMenus);
 EventHandler.on(document, EVENT_KEYUP_DATA_API, Dropdown.clearMenus);
-EventHandler.on(document, EVENT_CLICK_DATA_API$3, SELECTOR_DATA_TOGGLE$3, function(event) {
-  event.preventDefault();
+EventHandler.on(document, EVENT_CLICK_DATA_API$3, SELECTOR_DATA_TOGGLE$3, function(event2) {
+  event2.preventDefault();
   Dropdown.getOrCreateInstance(this).toggle();
 });
 defineJQueryPlugin(Dropdown);
@@ -3243,8 +3243,8 @@ class FocusTrap extends Config {
       this._config.trapElement.focus();
     }
     EventHandler.off(document, EVENT_KEY$5);
-    EventHandler.on(document, EVENT_FOCUSIN$2, (event) => this._handleFocusin(event));
-    EventHandler.on(document, EVENT_KEYDOWN_TAB, (event) => this._handleKeydown(event));
+    EventHandler.on(document, EVENT_FOCUSIN$2, (event2) => this._handleFocusin(event2));
+    EventHandler.on(document, EVENT_KEYDOWN_TAB, (event2) => this._handleKeydown(event2));
     this._isActive = true;
   }
   deactivate() {
@@ -3254,11 +3254,11 @@ class FocusTrap extends Config {
     this._isActive = false;
     EventHandler.off(document, EVENT_KEY$5);
   }
-  _handleFocusin(event) {
+  _handleFocusin(event2) {
     const {
       trapElement
     } = this._config;
-    if (event.target === document || event.target === trapElement || trapElement.contains(event.target)) {
+    if (event2.target === document || event2.target === trapElement || trapElement.contains(event2.target)) {
       return;
     }
     const elements = SelectorEngine.focusableChildren(trapElement);
@@ -3270,11 +3270,11 @@ class FocusTrap extends Config {
       elements[0].focus();
     }
   }
-  _handleKeydown(event) {
-    if (event.key !== TAB_KEY) {
+  _handleKeydown(event2) {
+    if (event2.key !== TAB_KEY) {
       return;
     }
-    this._lastTabNavDirection = event.shiftKey ? TAB_NAV_BACKWARD : TAB_NAV_FORWARD;
+    this._lastTabNavDirection = event2.shiftKey ? TAB_NAV_BACKWARD : TAB_NAV_FORWARD;
   }
 }
 const NAME$7 = "modal";
@@ -3413,12 +3413,12 @@ class Modal extends BaseComponent {
     this._queueCallback(transitionComplete, this._dialog, this._isAnimated());
   }
   _addEventListeners() {
-    EventHandler.on(this._element, EVENT_KEYDOWN_DISMISS$1, (event) => {
-      if (event.key !== ESCAPE_KEY$1) {
+    EventHandler.on(this._element, EVENT_KEYDOWN_DISMISS$1, (event2) => {
+      if (event2.key !== ESCAPE_KEY$1) {
         return;
       }
       if (this._config.keyboard) {
-        event.preventDefault();
+        event2.preventDefault();
         this.hide();
         return;
       }
@@ -3429,9 +3429,9 @@ class Modal extends BaseComponent {
         this._adjustDialog();
       }
     });
-    EventHandler.on(this._element, EVENT_MOUSEDOWN_DISMISS, (event) => {
-      EventHandler.one(this._element, EVENT_CLICK_DISMISS, (event2) => {
-        if (this._element !== event.target || this._element !== event2.target) {
+    EventHandler.on(this._element, EVENT_MOUSEDOWN_DISMISS, (event2) => {
+      EventHandler.one(this._element, EVENT_CLICK_DISMISS, (event22) => {
+        if (this._element !== event2.target || this._element !== event22.target) {
           return;
         }
         if (this._config.backdrop === "static") {
@@ -3512,10 +3512,10 @@ class Modal extends BaseComponent {
     });
   }
 }
-EventHandler.on(document, EVENT_CLICK_DATA_API$2, SELECTOR_DATA_TOGGLE$2, function(event) {
+EventHandler.on(document, EVENT_CLICK_DATA_API$2, SELECTOR_DATA_TOGGLE$2, function(event2) {
   const target = getElementFromSelector(this);
   if (["A", "AREA"].includes(this.tagName)) {
-    event.preventDefault();
+    event2.preventDefault();
   }
   EventHandler.one(target, EVENT_SHOW$4, (showEvent) => {
     if (showEvent.defaultPrevented) {
@@ -3668,8 +3668,8 @@ class Offcanvas extends BaseComponent {
     });
   }
   _addEventListeners() {
-    EventHandler.on(this._element, EVENT_KEYDOWN_DISMISS, (event) => {
-      if (event.key !== ESCAPE_KEY) {
+    EventHandler.on(this._element, EVENT_KEYDOWN_DISMISS, (event2) => {
+      if (event2.key !== ESCAPE_KEY) {
         return;
       }
       if (!this._config.keyboard) {
@@ -3692,10 +3692,10 @@ class Offcanvas extends BaseComponent {
     });
   }
 }
-EventHandler.on(document, EVENT_CLICK_DATA_API$1, SELECTOR_DATA_TOGGLE$1, function(event) {
+EventHandler.on(document, EVENT_CLICK_DATA_API$1, SELECTOR_DATA_TOGGLE$1, function(event2) {
   const target = getElementFromSelector(this);
   if (["A", "AREA"].includes(this.tagName)) {
-    event.preventDefault();
+    event2.preventDefault();
   }
   if (isDisabled(this)) {
     return;
@@ -4158,8 +4158,8 @@ class Tooltip extends BaseComponent {
   _getTitle() {
     return this._resolvePossibleFunction(this._config.title) || this._element.getAttribute("data-bs-original-title");
   }
-  _initializeOnDelegatedTarget(event) {
-    return this.constructor.getOrCreateInstance(event.delegateTarget, this._getDelegateConfig());
+  _initializeOnDelegatedTarget(event2) {
+    return this.constructor.getOrCreateInstance(event2.delegateTarget, this._getDelegateConfig());
   }
   _isAnimated() {
     return this._config.animation || this.tip && this.tip.classList.contains(CLASS_NAME_FADE$2);
@@ -4228,21 +4228,21 @@ class Tooltip extends BaseComponent {
     const triggers = this._config.trigger.split(" ");
     for (const trigger of triggers) {
       if (trigger === "click") {
-        EventHandler.on(this._element, this.constructor.eventName(EVENT_CLICK$1), this._config.selector, (event) => {
-          const context = this._initializeOnDelegatedTarget(event);
+        EventHandler.on(this._element, this.constructor.eventName(EVENT_CLICK$1), this._config.selector, (event2) => {
+          const context = this._initializeOnDelegatedTarget(event2);
           context.toggle();
         });
       } else if (trigger !== TRIGGER_MANUAL) {
         const eventIn = trigger === TRIGGER_HOVER ? this.constructor.eventName(EVENT_MOUSEENTER) : this.constructor.eventName(EVENT_FOCUSIN$1);
         const eventOut = trigger === TRIGGER_HOVER ? this.constructor.eventName(EVENT_MOUSELEAVE) : this.constructor.eventName(EVENT_FOCUSOUT$1);
-        EventHandler.on(this._element, eventIn, this._config.selector, (event) => {
-          const context = this._initializeOnDelegatedTarget(event);
-          context._activeTrigger[event.type === "focusin" ? TRIGGER_FOCUS : TRIGGER_HOVER] = true;
+        EventHandler.on(this._element, eventIn, this._config.selector, (event2) => {
+          const context = this._initializeOnDelegatedTarget(event2);
+          context._activeTrigger[event2.type === "focusin" ? TRIGGER_FOCUS : TRIGGER_HOVER] = true;
           context._enter();
         });
-        EventHandler.on(this._element, eventOut, this._config.selector, (event) => {
-          const context = this._initializeOnDelegatedTarget(event);
-          context._activeTrigger[event.type === "focusout" ? TRIGGER_FOCUS : TRIGGER_HOVER] = context._element.contains(event.relatedTarget);
+        EventHandler.on(this._element, eventOut, this._config.selector, (event2) => {
+          const context = this._initializeOnDelegatedTarget(event2);
+          context._activeTrigger[event2.type === "focusout" ? TRIGGER_FOCUS : TRIGGER_HOVER] = context._element.contains(event2.relatedTarget);
           context._leave();
         });
       }
@@ -4497,10 +4497,10 @@ class ScrollSpy extends BaseComponent {
       return;
     }
     EventHandler.off(this._config.target, EVENT_CLICK);
-    EventHandler.on(this._config.target, EVENT_CLICK, SELECTOR_TARGET_LINKS, (event) => {
-      const observableSection = this._observableSections.get(event.target.hash);
+    EventHandler.on(this._config.target, EVENT_CLICK, SELECTOR_TARGET_LINKS, (event2) => {
+      const observableSection = this._observableSections.get(event2.target.hash);
       if (observableSection) {
-        event.preventDefault();
+        event2.preventDefault();
         const root = this._rootElement || window;
         const height = observableSection.offsetTop - this._element.offsetTop;
         if (root.scrollTo) {
@@ -4649,7 +4649,7 @@ class Tab extends BaseComponent {
       return;
     }
     this._setInitialAttributes(this._parent, this._getChildren());
-    EventHandler.on(this._element, EVENT_KEYDOWN, (event) => this._keydown(event));
+    EventHandler.on(this._element, EVENT_KEYDOWN, (event2) => this._keydown(event2));
   }
   static get NAME() {
     return NAME$1;
@@ -4713,14 +4713,14 @@ class Tab extends BaseComponent {
     };
     this._queueCallback(complete, element, element.classList.contains(CLASS_NAME_FADE$1));
   }
-  _keydown(event) {
-    if (![ARROW_LEFT_KEY, ARROW_RIGHT_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(event.key)) {
+  _keydown(event2) {
+    if (![ARROW_LEFT_KEY, ARROW_RIGHT_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(event2.key)) {
       return;
     }
-    event.stopPropagation();
-    event.preventDefault();
-    const isNext = [ARROW_RIGHT_KEY, ARROW_DOWN_KEY].includes(event.key);
-    const nextActiveElement = getNextActiveElement(this._getChildren().filter((element) => !isDisabled(element)), event.target, isNext, true);
+    event2.stopPropagation();
+    event2.preventDefault();
+    const isNext = [ARROW_RIGHT_KEY, ARROW_DOWN_KEY].includes(event2.key);
+    const nextActiveElement = getNextActiveElement(this._getChildren().filter((element) => !isDisabled(element)), event2.target, isNext, true);
     if (nextActiveElement) {
       nextActiveElement.focus({
         preventScroll: true
@@ -4806,9 +4806,9 @@ class Tab extends BaseComponent {
     });
   }
 }
-EventHandler.on(document, EVENT_CLICK_DATA_API, SELECTOR_DATA_TOGGLE, function(event) {
+EventHandler.on(document, EVENT_CLICK_DATA_API, SELECTOR_DATA_TOGGLE, function(event2) {
   if (["A", "AREA"].includes(this.tagName)) {
-    event.preventDefault();
+    event2.preventDefault();
   }
   if (isDisabled(this)) {
     return;
@@ -4919,8 +4919,8 @@ class Toast extends BaseComponent {
       this.hide();
     }, this._config.delay);
   }
-  _onInteraction(event, isInteracting) {
-    switch (event.type) {
+  _onInteraction(event2, isInteracting) {
+    switch (event2.type) {
       case "mouseover":
       case "mouseout": {
         this._hasMouseInteraction = isInteracting;
@@ -4936,17 +4936,17 @@ class Toast extends BaseComponent {
       this._clearTimeout();
       return;
     }
-    const nextElement = event.relatedTarget;
+    const nextElement = event2.relatedTarget;
     if (this._element === nextElement || this._element.contains(nextElement)) {
       return;
     }
     this._maybeScheduleHide();
   }
   _setListeners() {
-    EventHandler.on(this._element, EVENT_MOUSEOVER, (event) => this._onInteraction(event, true));
-    EventHandler.on(this._element, EVENT_MOUSEOUT, (event) => this._onInteraction(event, false));
-    EventHandler.on(this._element, EVENT_FOCUSIN, (event) => this._onInteraction(event, true));
-    EventHandler.on(this._element, EVENT_FOCUSOUT, (event) => this._onInteraction(event, false));
+    EventHandler.on(this._element, EVENT_MOUSEOVER, (event2) => this._onInteraction(event2, true));
+    EventHandler.on(this._element, EVENT_MOUSEOUT, (event2) => this._onInteraction(event2, false));
+    EventHandler.on(this._element, EVENT_FOCUSIN, (event2) => this._onInteraction(event2, true));
+    EventHandler.on(this._element, EVENT_FOCUSOUT, (event2) => this._onInteraction(event2, false));
   }
   _clearTimeout() {
     clearTimeout(this._timeout);
@@ -4974,7 +4974,11 @@ const home = {
                     <h2 class="justify-content-center text-center pt-5 pb-5">Birras y tapas</h2>
                     <div id="parte1"></div>
                     <div id="parte2" class="pt-5"></div>
-                </div>`
+                </div>
+                <div class="ps-5 pb-5 pt-5">
+                    <button class="btn btn-primary">Enviar Pedido</button>
+                </div>
+               `
 };
 const cervezas = [
   {
@@ -5018,71 +5022,110 @@ const cervezas = [
     imagen: "https://static.damm.com/sites/default/files/config-page/estrella_header_logo/estrella-damm_0.png"
   }
 ];
-const formulario = {
-  template: `<div class="row border pt-5 shadow ps-5">
-    <h2 class="pt-5">Selecciona tu cerveza y haz tu pedido</h2>
-  <div class="col-6">
-    <form class="row g-3">
-        <div class="col-12">
-          <label for="nombre" class="form-label">Nombre del grupo</label>
-          <input type="text" class="form-control" id="nombre">
-        </div>
-        <div class="col-12">
-          <label for="numeroMesa" class="form-label">Mesa</label>
-          <input type="number" class="form-control" id="numeroMesa">
-        </div>
-        <div class="col-12">
-            <label for="selectBirra" class="form-label">Elije tu birra</label>
-            <select id="selectBirra" class="form-select">
-                <option selected>Mahou Cinco Estrellas</option>
-            </select>
-        </div>
-        <div class="col-12">
-          <label for="cantidad" class="form-label">\xBFCuantas te traigo?</label>
-          <input type="number" class="form-control" id="cantidad">
-        </div> 
-        <div class="col-12">
-          <button type="submit" class="btn btn-success ps-5 pe-5">A\xF1adir pedido</button>
-        </div>
-      </form>
-  </div>
-  <div class="col-6">
-      <div class="pb-5">
-        <h3 id="nombre" class="pb-3">` + cervezas[0].nombre + `</h3>
-        <p id="descripcion">` + cervezas[0].descripcion + `</p>
-      </div>
-      <img src="` + cervezas[0].imagen + `" class="card-img-bottom w-25" alt="">
-  </div>
-</div>
-`
-};
 const tablaPedidos = {
   template: `<div class="row shadow border pt-5 ps-3 pb-5 pe-3">
-    <div class="col-12">
-        <h3>Esto es lo que te has tomado ya ...</h3>
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Cerveza</th>
-                <th scope="col">Cantidad</th>
-                <th></th>     
-                <th></th>     
-              </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>` + cervezas[0].nombre + `</td>
-                <td>` + 5 + `</td>
-                <td><button class="btn btn-danger">Eliminar</button></td>
-                <td><button class="btn btn-warning">Editar Perfil</button></td>  
-            </tr>
-            </tbody>
-          </table>
-    </div>
-</div>
-    `
+                    <div class="col-12">
+                        <h3>Esto es lo que te has tomado ya ...</h3>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Cerveza</th>
+                                <th scope="col">Cantidad</th>
+                                <th></th>     
+                                <th></th>     
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `,
+  script: () => {
+    var select = document.getElementById("selectBirra");
+    var value = select.options[select.selectedIndex].value - 1;
+    let cantidad = document.querySelector("#cantidad").value;
+    let tr = document.createElement("tr");
+    tr.innerHTML = `
+                    <td>` + cervezas[value].nombre + `</td>
+                    <td>` + cantidad + `</td>
+                    <td><button class="btn btn-danger">Eliminar</button></td>
+                    <td><button class="btn btn-warning">Editar Pedido</button></td>  
+                `;
+    document.querySelector("tbody").appendChild(tr);
+  }
+};
+const formulario = {
+  template: `<div class="row border pt-5 shadow ps-5 pb-5">
+                  <h2 class="pt-5">Selecciona tu cerveza y haz tu pedido</h2>
+                <div class="col-6">
+                  <form class="row g-3">
+                      <div class="col-12">
+                        <label for="nombre" class="form-label">Nombre del grupo</label>
+                        <input type="text" class="form-control" id="nombre">
+                      </div>
+                      <div class="col-12">
+                        <label for="numeroMesa" class="form-label">Mesa</label>
+                        <input type="number" class="form-control" id="numeroMesa">
+                      </div>
+                      <div class="col-12">
+                          <label for="selectBirra" class="form-label">Elije tu birra</label>
+                          <select id="selectBirra" class="form-select">
+                              
+                          </select>
+                      </div>
+                      <div class="col-12">
+                        <label for="cantidad" class="form-label">\xBFCuantas te traigo?</label>
+                        <input type="number" class="form-control" id="cantidad">
+                      </div> 
+                      <div class="col-12">
+                        <div class="d-grid gap-2">
+                          <button id="pedido" type="submit" class="btn btn-success ps-5 pe-5">A\xF1adir pedido</button>
+                        </div>  
+                      </div>
+                    </form>
+                </div>
+                <div id="muestraCerveza" class="col-6">
+                    
+                </div>
+              </div>
+              `,
+  script: () => {
+    let html;
+    let numero;
+    cervezas.forEach((element) => {
+      html += `<option value="` + element.id + `">` + element.nombre + `</option>`;
+    });
+    document.querySelector("#selectBirra").innerHTML = html;
+    const selectElement = document.querySelector("#selectBirra");
+    let descripcion = ` <div class="pb-5">
+                            <h3 id="nombre" class="pb-3">` + cervezas[0].nombre + `</h3>
+                            <p id="descripcion">` + cervezas[0].descripcion + `</p>
+                          </div>
+                          <img src="` + cervezas[0].imagen + `" class="card-img-bottom w-25 img-fluid" alt="">
+                        `;
+    document.querySelector("#muestraCerveza").innerHTML = descripcion;
+    selectElement.addEventListener("change", (event2) => {
+      numero = event2.target.value - 1;
+      descripcion = ` <div class="pb-5">
+                              <h3 id="nombre" class="pb-3">` + cervezas[numero].nombre + `</h3>
+                              <p id="descripcion">` + cervezas[numero].descripcion + `</p>
+                            </div>
+                            <img src="` + cervezas[numero].imagen + `" class="card-img-bottom w-25 img-fluid" alt="">
+                            `;
+      document.querySelector("#muestraCerveza").innerHTML = descripcion;
+    });
+    document.querySelector("#pedido").addEventListener("click", () => {
+      event.preventDefault();
+      tablaPedidos.script();
+    });
+  }
 };
 document.querySelector("header").innerHTML = header.template;
 document.querySelector("main").innerHTML = home.template;
 document.querySelector("#parte1").innerHTML = formulario.template;
 document.querySelector("#parte2").innerHTML = tablaPedidos.template;
+formulario.script();
