@@ -63,10 +63,29 @@ export const  formulario = {
                             `
                             document.querySelector('#muestraCerveza').innerHTML = descripcion
     })
-
+   
     document.querySelector('#pedido').addEventListener("click", ()=>{
       event.preventDefault()
-      tablaPedidos.script()
+      
+      
+
+      let item = document.getElementById("pedido");
+      let condicion = item.classList.contains( 'btn-warning');
+      
+      if(condicion == true){
+       let nombreMesa = document.querySelector('#nombre').value
+       var select = document.getElementById('selectBirra');
+
+       var value = select.options[select.selectedIndex].value -1
+       document.getElementById(nombreMesa+"-nomb").innerHTML = cervezas[value].nombre
+
+       let cantidadCervezas = document.querySelector('#cantidad').value
+       document.getElementById(nombreMesa+"-cant").innerHTML = cantidadCervezas
+
+      }
+      else{
+        tablaPedidos.script()
+      }
     })
   }
 }
