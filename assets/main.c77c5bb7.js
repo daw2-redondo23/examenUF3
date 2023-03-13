@@ -4976,7 +4976,10 @@ const home = {
                     <div id="parte2" class="pt-5"></div>
                 </div>
                 <div class="ps-5 pb-5 pt-5">
-                    <button class="btn btn-primary">Enviar Pedido</button>
+                    <form>
+                    <button class="btn btn-primary" type="submit">Enviar Pedido</button>
+                    </form>
+                    
                 </div>
                `
 };
@@ -5054,12 +5057,13 @@ const tablaPedidos = {
     let condicion = item.classList.contains("btn-warning");
     if (condicion == false) {
       let tr = document.createElement("tr");
-      tr.setAttribute("id", nombre);
+      let numRandom = Math.random();
+      tr.setAttribute("id", numRandom);
       tr.innerHTML = `
-                        <td id="` + nombre + `-nomb">` + cervezas[value].nombre + `</td>
-                        <td id="` + nombre + `-cant">` + cantidad + `</td>
-                        <td><button class="btn btn-danger" id="eliminar"  data-id="` + nombre + `">Eliminar</button></td>
-                        <td><button class="btn btn-warning" id="editar" data-id="` + value + `" data-cantidad="` + cantidad + `" data-nombre="` + nombre + `" data-mesa="` + numMesa + `">Editar Pedido</button></td>  
+                        <td id="` + numRandom + `-nomb">` + cervezas[value].nombre + `</td>
+                        <td id="` + numRandom + `-cant">` + cantidad + `</td>
+                        <td><button class="btn btn-danger" id="eliminar"  data-id="` + numRandom + `">Eliminar</button></td>
+                        <td><button class="btn btn-warning" id="editar" data-id="` + numRandom + `" data-value="` + value + `" data-cantidad="` + cantidad + `" data-nombre="` + nombre + `" data-mesa="` + numMesa + `">Editar Pedido</button></td>  
                     `;
       document.querySelector("tbody").appendChild(tr);
     }
@@ -5077,10 +5081,12 @@ const tablaPedidos = {
         let cant = event2.target.getAttribute("data-cantidad");
         let nombreData = event2.target.getAttribute("data-nombre");
         let numData = event2.target.getAttribute("data-mesa");
+        let valorSelect = event2.target.getAttribute("data-value");
         document.querySelector("#nombre").value = nombreData;
         document.querySelector("#numeroMesa").value = numData;
-        document.querySelector("#selectBirra").selectedIndex = id;
+        document.querySelector("#selectBirra").selectedIndex = valorSelect;
         document.querySelector("#cantidad").value = cant;
+        document.querySelector("#input-oculto").value = id;
         document.querySelector("#pedido").innerHTML = "Editar pedido";
         document.querySelector("#pedido").classList = "btn btn-warning ps-5 pe-5";
       });
@@ -5109,6 +5115,7 @@ const formulario = {
                       <div class="col-12">
                         <label for="cantidad" class="form-label">\xBFCuantas te traigo?</label>
                         <input type="number" class="form-control" id="cantidad">
+                        <input type="hidden" id="input-oculto">
                       </div> 
                       <div class="col-12">
                         <div class="d-grid gap-2">
@@ -5129,7 +5136,6 @@ const formulario = {
       html += `<option value="` + element.id + `">` + element.nombre + `</option>`;
     });
     document.querySelector("#selectBirra").innerHTML = html;
-    const selectElement = document.querySelector("#selectBirra");
     let descripcion = ` <div class="pb-5">
                             <h3 id="nombre" class="pb-3">` + cervezas[0].nombre + `</h3>
                             <p id="descripcion">` + cervezas[0].descripcion + `</p>
@@ -5137,6 +5143,7 @@ const formulario = {
                           <img src="` + cervezas[0].imagen + `" class="card-img-bottom w-25 img-fluid" alt="">
                         `;
     document.querySelector("#muestraCerveza").innerHTML = descripcion;
+    const selectElement = document.querySelector("#selectBirra");
     selectElement.addEventListener("change", (event2) => {
       numero = event2.target.value - 1;
       descripcion = ` <div class="pb-5">
@@ -5152,12 +5159,13 @@ const formulario = {
       let item = document.getElementById("pedido");
       let condicion = item.classList.contains("btn-warning");
       if (condicion == true) {
-        let nombreMesa = document.querySelector("#nombre").value;
+        let id = document.querySelector("#input-oculto").value;
         var select = document.getElementById("selectBirra");
         var value = select.options[select.selectedIndex].value - 1;
-        document.getElementById(nombreMesa + "-nomb").innerHTML = cervezas[value].nombre;
+        document.getElementById(id + "-nomb").innerHTML = cervezas[value].nombre;
         let cantidadCervezas = document.querySelector("#cantidad").value;
-        document.getElementById(nombreMesa + "-cant").innerHTML = cantidadCervezas;
+        document.getElementById(id + "-cant").innerHTML = cantidadCervezas;
+        tablaPedidos.script();
       } else {
         tablaPedidos.script();
       }
