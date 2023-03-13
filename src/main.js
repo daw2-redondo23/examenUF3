@@ -8,9 +8,9 @@ import { home } from './vistas/home'
 import { formulario } from './componentes/pedidos'
 import { tablaPedidos } from './componentes/tablaPedidos'
 
-document.querySelector('header').innerHTML = header.template
-document.querySelector('main').innerHTML = home.template
-document.querySelector('#parte1').innerHTML = formulario.template;
-document.querySelector('#parte2').innerHTML = tablaPedidos.template
+document.querySelector('header').innerHTML = header.template //inyecto la plantilla header
+document.querySelector('main').innerHTML = home.template //inyecto la plantilla home en el main
+document.querySelector('#parte1').innerHTML = formulario.template; //inyecto el formulario dentro de un div
+document.querySelector('#parte2').innerHTML = tablaPedidos.template //inyecto la tabla dentro del segundo div
 
-formulario.script()
+formulario.script() //llamo al funcionalidad de el componente formulario

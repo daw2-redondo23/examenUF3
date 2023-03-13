@@ -22,6 +22,7 @@ export const  formulario = {
                       <div class="col-12">
                         <label for="cantidad" class="form-label">¿Cuantas te traigo?</label>
                         <input type="number" class="form-control" id="cantidad">
+                        <input type="hidden" id="input-oculto">
                       </div> 
                       <div class="col-12">
                         <div class="d-grid gap-2">
@@ -39,12 +40,13 @@ export const  formulario = {
     let html;
     let numero
     cervezas.forEach(element => {
-      html += `<option value="`+ element.id +`">`+ element.nombre +`</option>`
+      html += `<option value="`+ element.id +`">`+ element.nombre +`</option>`  //para cada cerveza del array genero una etiqueta option
     })
 
-    document.querySelector('#selectBirra').innerHTML = html
+    document.querySelector('#selectBirra').innerHTML = html //inyecto las opciones dentro del select
 
-    const selectElement = document.querySelector('#selectBirra');
+    
+    // genero una carta inicial que corresponde al primer item del array cervezas
     let descripcion  = ` <div class="pb-5">
                             <h3 id="nombre" class="pb-3">`+ cervezas[0].nombre +`</h3>
                             <p id="descripcion">`+ cervezas[0].descripcion +`</p>
@@ -52,8 +54,9 @@ export const  formulario = {
                           <img src="`+ cervezas[0].imagen +`" class="card-img-bottom w-25 img-fluid" alt="">
                         `
 
-  document.querySelector('#muestraCerveza').innerHTML = descripcion
-    selectElement.addEventListener('change', (event) => {
+  document.querySelector('#muestraCerveza').innerHTML = descripcion //inyecto en el div que se situa a la derecha la carta
+  const selectElement = document.querySelector('#selectBirra');  
+  selectElement.addEventListener('change', (event) => { //detecto el cambio en el select y genero la carta que pintare dependiendo de que opcion elijo
         numero = event.target.value -1
         descripcion = ` <div class="pb-5">
                               <h3 id="nombre" class="pb-3">`+ cervezas[numero].nombre +`</h3>
@@ -64,27 +67,25 @@ export const  formulario = {
                             document.querySelector('#muestraCerveza').innerHTML = descripcion
     })
    
-    document.querySelector('#pedido').addEventListener("click", ()=>{
-      event.preventDefault()
-      
-      
+    document.querySelector('#pedido').addEventListener("click", ()=>{ //al hacer click en el boton añadir pedido genero esta funcion
+      event.preventDefault()  //evito el refresco de la pagina 
 
       let item = document.getElementById("pedido");
-      let condicion = item.classList.contains( 'btn-warning');
+      let condicion = item.classList.contains( 'btn-warning'); //miro si el boton de añadir pedido contiene la clase btn-warning
       
-      if(condicion == true){
-       let nombreMesa = document.querySelector('#nombre').value
+      if(condicion == true){ //si contiene la clase btn-warning significa que estoy editando y por lo tanto los valores que cambie al darle a editar pedido se cambiaran en la tabla
+       let id = document.querySelector('#input-oculto').value
        var select = document.getElementById('selectBirra');
 
        var value = select.options[select.selectedIndex].value -1
-       document.getElementById(nombreMesa+"-nomb").innerHTML = cervezas[value].nombre
+       document.getElementById(id+"-nomb").innerHTML = cervezas[value].nombre
 
        let cantidadCervezas = document.querySelector('#cantidad').value
-       document.getElementById(nombreMesa+"-cant").innerHTML = cantidadCervezas
-
+       document.getElementById(id+"-cant").innerHTML = cantidadCervezas
+       tablaPedidos.script()
       }
       else{
-        tablaPedidos.script()
+        tablaPedidos.script() //si no estoy editando llamare simplemente a la funcion script 
       }
     })
   }

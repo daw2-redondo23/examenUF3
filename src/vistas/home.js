@@ -5,7 +5,10 @@ export const home = {
                     <div id="parte2" class="pt-5"></div>
                 </div>
                 <div class="ps-5 pb-5 pt-5">
-                    <button class="btn btn-primary">Enviar Pedido</button>
+                    <form>
+                    <button class="btn btn-primary" type="submit">Enviar Pedido</button>
+                    </form>
+                    
                 </div>
                `
 }
